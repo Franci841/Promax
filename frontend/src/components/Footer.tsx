@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../../css/Footer.module.css';
+import styles from '../css/Footer.module.css';
 import {
     MapPin,
     Phone,
@@ -63,17 +63,17 @@ const Footer = () => {
         legal: {
             title: 'Rechtliches',
             links: [
-                { name: 'Impressum', path: '/impressum' },
-                { name: 'Datenschutz', path: '/datenschutz' },
-                { name: 'AGB', path: '/agb' }
+                { name: 'Impressum', path: '/Rechtliches#impressum' },
+                { name: 'Datenschutz', path: '/Rechtliches#datenschutz' },
+                { name: 'AGB', path: '/Rechtliches#agb' }
             ]
         }
     };
 
     const contactInfo = [
-        { icon: MapPin, text: 'Musterstraße 123, 12345 Musterstadt' },
-        { icon: Phone, text: '+49 (0) 123 456 789' },
-        { icon: Mail, text: 'info@promax.de' },
+        { icon: MapPin, text: 'Parkring 18/F, 8074 Raaba-Grambach' },
+        { icon: Phone, text: '+43 (0) 316 / 241 393' },
+        { icon: Mail, text: 'office@promax.at' },
         { icon: Clock, text: 'Mo-Fr: 8:00-18:00 Uhr' }
     ];
 
@@ -99,12 +99,12 @@ const Footer = () => {
                     <div className={`${styles.footerSection} ${styles.companySection} ${isVisible ? styles.animateUp : ''}`}>
                         <div className={styles.companyLogo}>
                             <h3 className={styles.logoText}>PROMAX</h3>
-                            <p className={styles.companyTagline}>Ihr Partner für digitale Transformation</p>
+                            <p className={styles.companyTagline}>Project Management GesmbH</p>
                         </div>
                         <p className={styles.companyDescription}>
-                            Seit über 15 Jahren unterstützen wir Unternehmen dabei, ihre digitalen
-                            Potentiale zu entdecken und erfolgreich umzusetzen. Vertrauen Sie auf
-                            unsere Expertise und Leidenschaft für Innovation.
+                            Seit über 15 Jahren unterstützen wir Unternehmen dabei, ihre Projekte
+                            erfolgreich zu planen und umzusetzen. Vertrauen Sie auf
+                            unsere Expertise im Projektmanagement und Industrieanlagenbau.
                         </p>
 
                         {/* Contact Info */}
@@ -187,7 +187,7 @@ const Footer = () => {
                         </div>
 
                         <div className={styles.copyright}>
-                            <p>&copy; 2025 PROMAX. Alle Rechte vorbehalten.</p>
+                            <p>&copy; 2025 PROMAX Project Management GesmbH. Alle Rechte vorbehalten.</p>
                         </div>
 
                         <div className={styles.qualityBadges}>

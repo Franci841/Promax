@@ -9,7 +9,6 @@ export interface Job {
     experience: string;
     teamSize: string;
     posted: string;
-    urgent: boolean;
     description: string;
     responsibilities: string[];
     requirements: string[];
@@ -26,7 +25,6 @@ export const jobOpenings: Job[] = [
         experience: "5+ Jahre",
         teamSize: "8-12 Personen",
         posted: "Vor 2 Tagen",
-        urgent: false,
         description: "Wir suchen einen erfahrenen Projektingenieur für die Leitung komplexer Industrieanlagen-Projekte. Sie verantworten die technische Projektabwicklung von der Konzeption bis zur Inbetriebnahme.",
         responsibilities: [
             "Technische Projektleitung von Industrieanlagen",
@@ -56,7 +54,6 @@ export const jobOpenings: Job[] = [
         experience: "3+ Jahre",
         teamSize: "15+ Personen",
         posted: "Vor 1 Woche",
-        urgent: true,
         description: "Für unsere wachsende Pharma-Sparte suchen wir einen engagierten Projektmanager zur Steuerung von GMP-konformen Anlagenprojekten.",
         responsibilities: [
             "Projektmanagement von Pharma-Anlagen",
@@ -86,7 +83,6 @@ export const jobOpenings: Job[] = [
         experience: "2+ Jahre",
         teamSize: "5-8 Personen",
         posted: "Vor 3 Tagen",
-        urgent: false,
         description: "Verstärken Sie unser Konstruktionsteam als CAD-Spezialist für innovative Anlagentechnik-Lösungen mit modernster Software.",
         responsibilities: [
             "3D-CAD-Konstruktion von Anlagenkomponenten",
@@ -116,7 +112,6 @@ export const jobOpenings: Job[] = [
         experience: "4+ Jahre",
         teamSize: "20+ Personen",
         posted: "Vor 5 Tagen",
-        urgent: false,
         description: "Als Bauleiter koordinieren Sie die Errichtung komplexer Industrieanlagen direkt vor Ort und sorgen für termingerechte Projektabwicklung.",
         responsibilities: [
             "Baustellenleitung und -koordination",
@@ -146,7 +141,6 @@ export const jobOpenings: Job[] = [
         experience: "Berufseinsteiger",
         teamSize: "Rotation",
         posted: "Vor 1 Woche",
-        urgent: false,
         description: "Starten Sie Ihre Karriere im Anlagenbau mit unserem strukturierten 18-monatigen Trainee-Programm in verschiedenen Fachbereichen.",
         responsibilities: [
             "Rotation durch verschiedene Abteilungen",
@@ -176,7 +170,6 @@ export const jobOpenings: Job[] = [
         experience: "3+ Jahre",
         teamSize: "6-10 Personen",
         posted: "Vor 4 Tagen",
-        urgent: true,
         description: "Für innovative Automatisierungslösungen in der Prozessindustrie suchen wir einen Spezialisten für SPS-Programmierung und Leitsysteme.",
         responsibilities: [
             "SPS-Programmierung (Siemens, ABB)",
@@ -206,7 +199,6 @@ export const jobOpenings: Job[] = [
         experience: "3-5 Jahre",
         teamSize: "10-15 Personen",
         posted: "Vor 6 Tagen",
-        urgent: false,
         description: "Für die Planung und Optimierung chemischer Prozessanlagen suchen wir einen erfahrenen Verfahrensingenieur mit Schwerpunkt Chemie.",
         responsibilities: [
             "Auslegung verfahrenstechnischer Anlagen",
@@ -236,7 +228,6 @@ export const jobOpenings: Job[] = [
         experience: "5+ Jahre",
         teamSize: "5-8 Personen",
         posted: "Vor 3 Tagen",
-        urgent: true,
         description: "Zur Verstärkung unseres QM-Teams suchen wir einen erfahrenen Qualitätsmanager mit fundiertem GMP-Know-how.",
         responsibilities: [
             "Implementierung von QM-Systemen",

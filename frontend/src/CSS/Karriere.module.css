@@ -1,8 +1,41 @@
-/* Karriere.module.css */
+/* Karriere.module.css - Blue Theme Version */
 
 .karrierePage {
     min-height: 100vh;
     background: #f8fafc;
+    overflow-x: hidden;
+}
+
+/* Simple Scroll Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Hero Section */
@@ -21,7 +54,7 @@
     position: absolute;
     inset: 0;
     background:
-            radial-gradient(circle at 20% 50%, rgba(230, 126, 34, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 20% 50%, rgba(30, 58, 95, 0.15) 0%, transparent 50%),
             radial-gradient(circle at 80% 80%, rgba(143, 160, 165, 0.15) 0%, transparent 50%);
     z-index: 1;
 }
@@ -35,7 +68,7 @@
     width: 100%;
     opacity: 0;
     transform: translateY(30px);
-    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .heroVisible .heroContent {
@@ -56,45 +89,68 @@
     font-size: 0.875rem;
     font-weight: 500;
     color: #e2e8f0;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 .heroTitle {
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 700;
     color: #f8fafc;
     margin-bottom: 1.5rem;
     line-height: 1.1;
     letter-spacing: -0.02em;
+    animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 .heroAccent {
-    color: #e67e22;
+    color: #3b82f6;
+    position: relative;
+    display: inline-block;
+}
+
+.heroAccent::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    border-radius: 2px;
+    animation: fadeIn 1s ease-out 0.5s both;
 }
 
 .heroSubtitle {
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
     color: #cbd5e1;
     max-width: 800px;
     margin: 0 auto 3rem;
     line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
 .heroStats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
     max-width: 600px;
     margin: 0 auto;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
 }
 
 .statItem {
     text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.statItem:hover {
+    transform: translateY(-3px);
 }
 
 .statNumber {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 700;
-    color: #e67e22;
+    color: #3b82f6;
     margin-bottom: 0.5rem;
 }
 
@@ -112,23 +168,52 @@
     padding: 0 2rem;
 }
 
+/* Section Animations */
+.scrollAnimation {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+}
+
+.scrollAnimationVisible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Section Styles */
 .sectionTitle {
-    font-size: 2.5rem;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
     font-weight: 700;
     color: #1e3a5f;
     text-align: center;
     margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.sectionTitle::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    border-radius: 2px;
 }
 
 .sectionSubtitle {
-    font-size: 1.125rem;
+    font-size: clamp(1rem, 2vw, 1.125rem);
     color: #64748b;
     text-align: center;
     margin-bottom: 3rem;
+    margin-top: 1rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    padding: 0 1rem;
 }
 
 .sectionHeader {
@@ -143,7 +228,7 @@
 
 .valuesGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
 }
 
@@ -153,23 +238,38 @@
     padding: 2rem;
     text-align: center;
     transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+    border: 1px solid transparent;
 }
+
+.valueCard:nth-child(1) { animation-delay: 0.1s; }
+.valueCard:nth-child(2) { animation-delay: 0.2s; }
+.valueCard:nth-child(3) { animation-delay: 0.3s; }
+.valueCard:nth-child(4) { animation-delay: 0.4s; }
 
 .valueCard:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
 }
 
 .valueIcon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, rgba(230, 126, 34, 0.1) 0%, rgba(230, 126, 34, 0.2) 100%);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.2) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1.5rem;
-    color: #e67e22;
+    color: #3b82f6;
+    transition: all 0.3s ease;
+}
+
+.valueCard:hover .valueIcon {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.3) 100%);
+    transform: scale(1.05);
 }
 
 .valueTitle {
@@ -184,65 +284,124 @@
     line-height: 1.6;
 }
 
-/* Jobs Section */
+/* Jobs Section - Neue Struktur */
 .jobsSection {
     padding: 5rem 0;
     background: #f8fafc;
+    position: relative;
 }
 
-/* Filter Tabs */
-.filterTabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
+/* Featured Jobs Grid - 3 Slots */
+.featuredJobsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
     margin-bottom: 3rem;
 }
 
-.filterTab {
-    background: #ffffff;
+/* Job Carousel Container */
+.jobCarouselContainer {
+    position: relative;
+    margin-top: 4rem;
+    padding: 2rem 0 1rem;
+    border-top: 1px solid #f1f5f9;
+    overflow: visible;
+}
+
+.carouselHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    padding: 0 1rem;
+}
+
+.carouselTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e3a5f;
+    position: relative;
+    display: inline-block;
+}
+
+.carouselTitle::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    border-radius: 2px;
+}
+
+.carouselControls {
+    display: flex;
+    gap: 1rem;
+}
+
+.carouselButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
     border: 2px solid #e2e8f0;
-    border-radius: 50px;
-    padding: 0.75rem 1.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #64748b;
-    cursor: pointer;
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #64748b;
 }
 
-.filterTab:hover {
-    border-color: #cbd5e1;
-    color: #475569;
+.carouselButton:hover:not(:disabled) {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+    transform: scale(1.05);
 }
 
-.filterTabActive {
-    background: #1e3a5f;
-    border-color: #1e3a5f;
-    color: #ffffff;
+.carouselButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-.filterCount {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.125rem 0.5rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
+.jobCarousel {
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #3b82f6 #f1f5f9;
+    padding: 10px 0 1.5rem;
+    margin: -10px 0;
 }
 
-.filterTabActive .filterCount {
-    background: rgba(255, 255, 255, 0.2);
+.jobCarousel::-webkit-scrollbar {
+    height: 8px;
 }
 
-/* Jobs Grid */
-.jobsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 2rem;
+.jobCarousel::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
 }
 
+.jobCarousel::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+    border-radius: 4px;
+}
+
+.jobCarousel::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #2563eb, #1e40af);
+}
+
+.carouselTrack {
+    display: flex;
+    gap: 1.5rem;
+    padding: 10px 1rem;
+}
+
+/* Job Card Styles */
 .jobCard {
     background: #ffffff;
     border-radius: 16px;
@@ -250,21 +409,28 @@
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
+    min-width: 350px;
+    max-width: 400px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.featuredJobsGrid .jobCard {
+    min-width: unset;
+    max-width: unset;
     animation: fadeInUp 0.6s ease-out forwards;
     opacity: 0;
 }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+.featuredJobsGrid .jobCard:nth-child(1) { animation-delay: 0.1s; }
+.featuredJobsGrid .jobCard:nth-child(2) { animation-delay: 0.2s; }
+.featuredJobsGrid .jobCard:nth-child(3) { animation-delay: 0.3s; }
 
 .jobCard:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border-color: #e67e22;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border-color: #3b82f6;
+    z-index: 10;
 }
 
 .cardHeader {
@@ -287,6 +453,23 @@
     color: white;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    position: relative;
+    overflow: hidden;
+}
+
+.departmentBadge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.jobCard:hover .departmentBadge::before {
+    left: 100%;
 }
 
 .urgentBadge {
@@ -311,7 +494,7 @@
 }
 
 .jobTitle {
-    font-size: 1.25rem;
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
     font-weight: 600;
     color: #1e293b;
     margin-bottom: 1rem;
@@ -320,7 +503,7 @@
 }
 
 .jobCard:hover .jobTitle {
-    color: #e67e22;
+    color: #3b82f6;
 }
 
 .jobMeta {
@@ -356,6 +539,7 @@
     justify-content: space-between;
     padding: 1rem 1.5rem;
     border-top: 1px solid #e2e8f0;
+    background: #fafbfc;
 }
 
 .footerInfo {
@@ -393,9 +577,9 @@
 }
 
 .jobCard:hover .cardAction {
-    background: #e67e22;
+    background: #3b82f6;
     color: white;
-    transform: scale(1.1) rotate(45deg);
+    transform: scale(1.1);
 }
 
 /* Benefits Section */
@@ -406,7 +590,7 @@
 
 .benefitsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
 }
 
@@ -414,7 +598,22 @@
     background: #f8fafc;
     border-radius: 12px;
     padding: 2rem;
-    border-left: 4px solid #e67e22;
+    border-left: 4px solid #3b82f6;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.benefitItem:nth-child(1) { animation-delay: 0.1s; }
+.benefitItem:nth-child(2) { animation-delay: 0.2s; }
+.benefitItem:nth-child(3) { animation-delay: 0.3s; }
+.benefitItem:nth-child(4) { animation-delay: 0.4s; }
+.benefitItem:nth-child(5) { animation-delay: 0.5s; }
+.benefitItem:nth-child(6) { animation-delay: 0.6s; }
+
+.benefitItem:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(59, 130, 246, 0.1);
 }
 
 .benefitItem h4 {
@@ -437,7 +636,7 @@
 
 .processSteps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 2rem;
     position: relative;
 }
@@ -445,12 +644,20 @@
 .processStep {
     text-align: center;
     position: relative;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
 }
+
+.processStep:nth-child(1) { animation-delay: 0.1s; }
+.processStep:nth-child(2) { animation-delay: 0.2s; }
+.processStep:nth-child(3) { animation-delay: 0.3s; }
+.processStep:nth-child(4) { animation-delay: 0.4s; }
+.processStep:nth-child(5) { animation-delay: 0.5s; }
 
 .stepNumber {
     width: 60px;
     height: 60px;
-    background: #e67e22;
+    background: #3b82f6;
     color: white;
     border-radius: 50%;
     display: flex;
@@ -459,6 +666,12 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0 auto 1rem;
+    transition: all 0.3s ease;
+}
+
+.processStep:hover .stepNumber {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
 }
 
 .processStep h4 {
@@ -488,6 +701,7 @@
     padding: 3rem;
     position: relative;
     overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
 }
 
 .ctaContent::before {
@@ -495,12 +709,12 @@
     position: absolute;
     inset: 0;
     background:
-            radial-gradient(circle at 20% 50%, rgba(230, 126, 34, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(143, 160, 165, 0.1) 0%, transparent 50%);
+            radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
 }
 
 .ctaTitle {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     color: #f8fafc;
     margin-bottom: 1rem;
@@ -509,7 +723,7 @@
 
 .ctaText {
     color: #cbd5e1;
-    font-size: 1.125rem;
+    font-size: clamp(1rem, 2vw, 1.125rem);
     margin-bottom: 2rem;
     line-height: 1.6;
     position: relative;
@@ -519,7 +733,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    background: #e67e22;
+    background: #3b82f6;
     color: white;
     padding: 1rem 2rem;
     border-radius: 50px;
@@ -527,14 +741,14 @@
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
     position: relative;
 }
 
 .ctaButton:hover {
-    background: #d97706;
+    background: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(230, 126, 34, 0.4);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
 }
 
 .ctaIcon {
@@ -559,7 +773,7 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -568,41 +782,24 @@
     animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
 .modalContent,
 .formContent {
     background: white;
     border-radius: 24px;
     max-width: 900px;
+    width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    animation: slideUp 0.4s ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    animation: fadeInUp 0.4s ease-out;
 }
 
 .closeBtn {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
+    position: sticky;
+    top: 1rem;
+    right: 1rem;
+    float: right;
+    margin: 1rem;
     width: 3rem;
     height: 3rem;
     background: #f1f5f9;
@@ -618,8 +815,9 @@
 }
 
 .closeBtn:hover {
-    background: #e2e8f0;
-    transform: rotate(90deg);
+    background: #3b82f6;
+    color: white;
+    transform: scale(1.1);
 }
 
 .modalHeader {
@@ -632,6 +830,7 @@
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
 .modalDepartmentBadge {
@@ -653,10 +852,11 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    animation: pulse 2s infinite;
 }
 
 .modalTitle {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     color: #1e293b;
     margin-bottom: 1rem;
@@ -664,7 +864,7 @@
 
 .modalMetaGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 1rem;
 }
 
@@ -719,6 +919,11 @@
     align-items: flex-start;
     gap: 0.75rem;
     margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.modalListItem:hover {
+    transform: translateX(5px);
 }
 
 .modalListDot {
@@ -730,11 +935,11 @@
 }
 
 .modalListDotOrange {
-    background: #e67e22;
+    background: #3b82f6;
 }
 
 .modalListDotBlue {
-    background: #1e3a5f;
+    background: #3b82f6;
 }
 
 .modalListDotGreen {
@@ -751,7 +956,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    background: #e67e22;
+    background: #3b82f6;
     color: white;
     padding: 1rem 2rem;
     border-radius: 50px;
@@ -759,13 +964,13 @@
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
 .modalApplyButton:hover {
-    background: #d97706;
+    background: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(230, 126, 34, 0.4);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
 }
 
 .modalApplyIcon {
@@ -791,7 +996,7 @@
 }
 
 .formTitle {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     color: #1e3a5f;
     margin-bottom: 0.5rem;
@@ -811,7 +1016,7 @@
 
 .formRow {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
 }
 
@@ -830,7 +1035,7 @@
 .formGroup input,
 .formGroup textarea {
     padding: 0.75rem 1rem;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -840,8 +1045,9 @@
 .formGroup input:focus,
 .formGroup textarea:focus {
     outline: none;
-    border-color: #e67e22;
+    border-color: #3b82f6;
     background: white;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
 }
 
 .fileInputWrapper {
@@ -869,7 +1075,7 @@
 }
 
 .fileLabel:hover {
-    border-color: #e67e22;
+    border-color: #3b82f6;
     background: white;
 }
 
@@ -882,7 +1088,7 @@
 
 .cancelButton {
     padding: 0.75rem 1.5rem;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
     border-radius: 50px;
     background: white;
     color: #64748b;
@@ -892,8 +1098,9 @@
 }
 
 .cancelButton:hover {
-    border-color: #cbd5e1;
-    background: #f8fafc;
+    border-color: #94a3b8;
+    background: #f1f5f9;
+    color: #475569;
 }
 
 .submitButton {
@@ -903,100 +1110,110 @@
     padding: 0.75rem 2rem;
     border: none;
     border-radius: 50px;
-    background: #e67e22;
+    background: #3b82f6;
     color: white;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .submitButton:hover {
-    background: #d97706;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Mobile Touch Indicators */
+.scrollIndicator {
+    display: none;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@media (max-width: 768px) {
+    .scrollIndicator {
+        display: block;
+    }
+
+    .carouselControls {
+        display: none;
+    }
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .heroTitle {
-        font-size: 2.5rem;
+    .featuredJobsGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
-    .jobsGrid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    .jobCarousel {
+        margin-top: 2rem;
+    }
+
+    .carouselTrack {
+        padding: 10px 0.5rem;
+    }
+
+    .jobCard {
+        min-width: 300px;
     }
 }
 
 @media (max-width: 768px) {
     .heroSection {
-        min-height: 50vh;
-    }
-
-    .heroTitle {
-        font-size: 2rem;
-    }
-
-    .heroSubtitle {
-        font-size: 1rem;
+        min-height: 80vh;
+        padding-top: 10%;
     }
 
     .heroStats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .sectionTitle {
-        font-size: 2rem;
-    }
-
-    .filterTabs {
-        gap: 0.5rem;
-    }
-
-    .filterTab {
-        padding: 0.5rem 1rem;
-        font-size: 0.8125rem;
-    }
-
-    .jobsGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .formRow {
-        grid-template-columns: 1fr;
-    }
-
-    .modalMetaGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .processSteps {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .heroTitle {
-        font-size: 1.75rem;
+        gap: 1rem;
     }
 
     .container {
         padding: 0 1rem;
     }
 
-    .jobCard {
-        min-width: 100%;
+    .valuesSection,
+    .jobsSection,
+    .benefitsSection,
+    .processSection,
+    .ctaSection {
+        padding: 3rem 0;
     }
 
-    .footerInfo {
-        flex-direction: column;
+    .valuesGrid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .benefitsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .processSteps {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 1rem;
     }
 
-    .modalContent,
-    .formContent {
-        margin: 1rem;
+    .stepNumber {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+
+    .modalContent {
+        border-radius: 16px;
+        margin: 0.5rem;
+    }
+
+    .modalGrid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 
     .formContent {
@@ -1005,18 +1222,112 @@
 
     .ctaContent {
         padding: 2rem 1.5rem;
+        border-radius: 16px;
     }
 
-    .ctaTitle {
-        font-size: 1.5rem;
+    .carouselHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
 
-    .benefitsGrid {
-        grid-template-columns: 1fr;
+    .jobCard {
+        min-width: 280px;
     }
 }
 
-/* Scrollbar Styling */
+@media (max-width: 480px) {
+    .heroTitle {
+        font-size: 1.75rem;
+    }
+
+    .heroSubtitle {
+        font-size: 0.9rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.5rem;
+    }
+
+    .sectionSubtitle {
+        font-size: 0.9rem;
+    }
+
+    .footerInfo {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .modalHeader {
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    .modalBody {
+        padding: 1.5rem 1rem;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+    }
+
+    .formActions {
+        flex-direction: column;
+    }
+
+    .cancelButton,
+    .submitButton {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Accessibility & Performance */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .urgentBadge {
+        animation: none;
+    }
+
+    .jobCard:hover {
+        transform: translateY(-2px);
+    }
+
+    .jobCard:hover .cardAction {
+        transform: scale(1.05);
+    }
+}
+
+/* Touch Device Enhancements */
+@media (hover: none) and (pointer: coarse) {
+    .jobCard {
+        transition: transform 0.2s ease;
+    }
+
+    .jobCard:active {
+        transform: scale(0.98);
+    }
+
+    .valueCard:active,
+    .benefitItem:active {
+        transform: scale(0.98);
+    }
+
+    .ctaButton:active,
+    .modalApplyButton:active,
+    .submitButton:active {
+        transform: scale(0.95);
+    }
+}
+
+/* Simplified scrollbar styling - removed colorful scrollbars */
 .modalContent::-webkit-scrollbar,
 .formContent::-webkit-scrollbar {
     width: 8px;
@@ -1037,25 +1348,4 @@
 .modalContent::-webkit-scrollbar-thumb:hover,
 .formContent::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-
-    .urgentBadge {
-        animation: none;
-    }
-
-    .jobCard:hover {
-        transform: none;
-    }
-
-    .jobCard:hover .cardAction {
-        transform: scale(1.05);
-    }
 }

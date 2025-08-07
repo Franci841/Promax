@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { MapPin, Clock, Users, ArrowRight, Calendar, Award, Target, Heart, Send, Upload } from 'lucide-react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { MapPin, Clock, Users, ArrowRight, Calendar, Award, Target, Heart, Send, Upload, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import styles from '../css/Karriere.module.css';
 import { Job, jobOpenings, getDepartmentColor } from '../mock/jobData.ts';
 
@@ -27,37 +27,143 @@ const Karriere = () => {
         cv: null
     });
     const [showForm, setShowForm] = useState<boolean>(false);
-    const heroRef = useRef<HTMLElement | null>(null);
+    const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
 
+    // Refs
+    const heroRef = useRef<HTMLElement>(null);
+    const carouselRef = useRef<HTMLDivElement>(null);
+    const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+    // Helper function for section refs
+    const setSectionRef = (key: string) => (el: HTMLElement | null) => {
+        sectionRefs.current[key] = el;
+    };
+
+    // Intersection Observer für Scroll-Animationen
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                }
-            },
-            {
-                threshold: 0.1
-            }
-        );
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
+        const observerCallback = (entries: IntersectionObserverEntry[]) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.getAttribute('data-section');
+                    if (sectionId === 'hero') {
+                        setIsVisible(true);
+                    } else if (sectionId) {
+                        setVisibleSections(prev => new Set(prev).add(sectionId));
+                    }
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+        // Observe hero
         if (heroRef.current) {
+            heroRef.current.setAttribute('data-section', 'hero');
             observer.observe(heroRef.current);
         }
 
-        return () => {
-            if (heroRef.current) {
-                observer.unobserve(heroRef.current);
+        // Observe other sections
+        Object.entries(sectionRefs.current).forEach(([key, ref]) => {
+            if (ref) {
+                ref.setAttribute('data-section', key);
+                observer.observe(ref);
             }
+        });
+
+        return () => {
+            observer.disconnect();
         };
     }, []);
 
+    // Carousel scroll functions
+    const scrollCarousel = useCallback((direction: 'left' | 'right') => {
+        if (carouselRef.current) {
+            const scrollAmount = 350; // Width of one card + gap
+            const currentScroll = carouselRef.current.scrollLeft;
+            const targetScroll = direction === 'left'
+                ? currentScroll - scrollAmount
+                : currentScroll + scrollAmount;
+
+            carouselRef.current.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+        }
+    }, []);
+
+    // Check if carousel can scroll
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+
+    const checkScrollability = useCallback(() => {
+        if (carouselRef.current) {
+            const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+            setCanScrollLeft(scrollLeft > 0);
+            setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+        }
+    }, []);
+
+    useEffect(() => {
+        const carousel = carouselRef.current;
+        if (carousel) {
+            carousel.addEventListener('scroll', checkScrollability);
+            checkScrollability();
+
+            // Check on resize
+            window.addEventListener('resize', checkScrollability);
+
+            return () => {
+                carousel.removeEventListener('scroll', checkScrollability);
+                window.removeEventListener('resize', checkScrollability);
+            };
+        }
+    }, [checkScrollability]);
+
+    // Touch handling for mobile
+    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+
+        const distance = touchStart - touchEnd;
+        const isLeftSwipe = distance > 50;
+        const isRightSwipe = distance < -50;
+
+        if (isLeftSwipe) {
+            scrollCarousel('right');
+        }
+        if (isRightSwipe) {
+            scrollCarousel('left');
+        }
+    };
+
+    // Split jobs into featured and carousel
+    const featuredJobs = jobOpenings.slice(0, 3);
+    const carouselJobs = jobOpenings.slice(3);
+
     const handleJobClick = (job: Job) => {
         setSelectedJob(job);
+        document.body.style.overflow = 'hidden';
     };
 
     const closeModal = () => {
         setSelectedJob(null);
+        document.body.style.overflow = 'unset';
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -83,6 +189,7 @@ const Karriere = () => {
         console.log('Form submitted:', formData);
         alert('Vielen Dank für Ihre Bewerbung! Wir melden uns bald bei Ihnen.');
         setShowForm(false);
+        document.body.style.overflow = 'unset';
         setFormData({
             firstName: '',
             lastName: '',
@@ -94,13 +201,28 @@ const Karriere = () => {
         });
     };
 
+    const openApplicationForm = (position?: string) => {
+        setSelectedJob(null);
+        setShowForm(true);
+        document.body.style.overflow = 'hidden';
+        if (position) {
+            setFormData(prev => ({
+                ...prev,
+                position
+            }));
+        }
+    };
+
     return (
         <div className={styles.karrierePage}>
             {/* Hero Section */}
             <section ref={heroRef} className={`${styles.heroSection} ${isVisible ? styles.heroVisible : ''}`}>
                 <div className={styles.heroBackground}></div>
                 <div className={styles.heroContent}>
-
+                    <div className={styles.heroBadge}>
+                        <Sparkles size={16} />
+                        <span>Wir stellen ein</span>
+                    </div>
                     <h1 className={styles.heroTitle}>
                         Gestalten Sie die Zukunft des <span className={styles.heroAccent}>Anlagenbaus</span>
                     </h1>
@@ -121,12 +243,19 @@ const Karriere = () => {
                             <div className={styles.statNumber}>500+</div>
                             <div className={styles.statLabel}>Projekte</div>
                         </div>
+                        <div className={styles.statItem}>
+                            <div className={styles.statNumber}>{jobOpenings.length}</div>
+                            <div className={styles.statLabel}>Offene Stellen</div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Values Section */}
-            <section className={styles.valuesSection}>
+            <section
+                ref={setSectionRef('values')}
+                className={`${styles.valuesSection} ${styles.scrollAnimation} ${visibleSections.has('values') ? styles.scrollAnimationVisible : ''}`}
+            >
                 <div className={styles.container}>
                     <h2 className={styles.sectionTitle}>Unsere Werte & Kultur</h2>
                     <div className={styles.valuesGrid}>
@@ -170,8 +299,11 @@ const Karriere = () => {
                 </div>
             </section>
 
-            {/* Jobs Section */}
-            <section className={styles.jobsSection}>
+            {/* Jobs Section - Neue Struktur */}
+            <section
+                ref={setSectionRef('jobs')}
+                className={`${styles.jobsSection} ${styles.scrollAnimation} ${visibleSections.has('jobs') ? styles.scrollAnimationVisible : ''}`}
+            >
                 <div className={styles.container}>
                     <div className={styles.sectionHeader}>
                         <h2 className={styles.sectionTitle}>Offene Stellen</h2>
@@ -180,9 +312,9 @@ const Karriere = () => {
                         </p>
                     </div>
 
-                    {/* Jobs Grid */}
-                    <div className={styles.jobsGrid}>
-                        {jobOpenings.map((job, index) => (
+                    {/* Featured Jobs - First 3 */}
+                    <div className={styles.featuredJobsGrid}>
+                        {featuredJobs.map((job, index) => (
                             <div
                                 key={job.id}
                                 className={styles.jobCard}
@@ -197,11 +329,6 @@ const Karriere = () => {
                                         >
                                             {job.department}
                                         </span>
-                                        {job.urgent && (
-                                            <span className={styles.urgentBadge}>
-                                                Dringend
-                                            </span>
-                                        )}
                                     </div>
 
                                     <h3 className={styles.jobTitle}>
@@ -248,11 +375,116 @@ const Karriere = () => {
                             </div>
                         ))}
                     </div>
+
+                    {/* Carousel for additional jobs */}
+                    {carouselJobs.length > 0 && (
+                        <div className={styles.jobCarouselContainer}>
+                            <div className={styles.carouselHeader}>
+                                <h3 className={styles.carouselTitle}>Weitere Positionen</h3>
+                                <div className={styles.carouselControls}>
+                                    <button
+                                        className={styles.carouselButton}
+                                        onClick={() => scrollCarousel('left')}
+                                        disabled={!canScrollLeft}
+                                        aria-label="Vorherige Jobs"
+                                    >
+                                        <ChevronLeft size={20} />
+                                    </button>
+                                    <button
+                                        className={styles.carouselButton}
+                                        onClick={() => scrollCarousel('right')}
+                                        disabled={!canScrollRight}
+                                        aria-label="Nächste Jobs"
+                                    >
+                                        <ChevronRight size={20} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div
+                                className={styles.jobCarousel}
+                                ref={carouselRef}
+                                onTouchStart={handleTouchStart}
+                                onTouchMove={handleTouchMove}
+                                onTouchEnd={handleTouchEnd}
+                            >
+                                <div className={styles.carouselTrack}>
+                                    {carouselJobs.map((job, index) => (
+                                        <div
+                                            key={job.id}
+                                            className={styles.jobCard}
+                                            style={{ animationDelay: `${(index + 3) * 0.1}s` }}
+                                            onClick={() => handleJobClick(job)}
+                                        >
+                                            <div className={styles.cardHeader}>
+                                                <div className={styles.badgesContainer}>
+                                                    <span
+                                                        className={styles.departmentBadge}
+                                                        style={{ backgroundColor: getDepartmentColor(job.department) }}
+                                                    >
+                                                        {job.department}
+                                                    </span>
+                                                </div>
+
+                                                <h3 className={styles.jobTitle}>
+                                                    {job.title}
+                                                </h3>
+
+                                                <div className={styles.jobMeta}>
+                                                    <div className={styles.metaItem}>
+                                                        <MapPin size={14} />
+                                                        <span>{job.location}</span>
+                                                    </div>
+                                                    <div className={styles.metaItem}>
+                                                        <Clock size={14} />
+                                                        <span>{job.type}</span>
+                                                    </div>
+                                                    <div className={styles.metaItem}>
+                                                        <Users size={14} />
+                                                        <span>Team: {job.teamSize}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className={styles.cardBody}>
+                                                <p className={styles.jobDescription}>
+                                                    {job.description}
+                                                </p>
+                                            </div>
+
+                                            <div className={styles.cardFooter}>
+                                                <div className={styles.footerInfo}>
+                                                    <div className={styles.footerItem}>
+                                                        <span className={styles.footerLabel}>Erfahrung</span>
+                                                        <span className={styles.footerValue}>{job.experience}</span>
+                                                    </div>
+                                                    <div className={styles.footerItem}>
+                                                        <span className={styles.footerLabel}>Veröffentlicht</span>
+                                                        <span className={styles.footerValue}>{job.posted}</span>
+                                                    </div>
+                                                </div>
+                                                <div className={styles.cardAction}>
+                                                    <ArrowRight size={16} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className={styles.scrollIndicator}>
+                                ← Wischen Sie für weitere Stellen →
+                            </div>
+                        </div>
+                    )}
                 </div>
             </section>
 
             {/* Benefits Section */}
-            <section className={styles.benefitsSection}>
+            <section
+                ref={setSectionRef('benefits')}
+                className={`${styles.benefitsSection} ${styles.scrollAnimation} ${visibleSections.has('benefits') ? styles.scrollAnimationVisible : ''}`}
+            >
                 <div className={styles.container}>
                     <h2 className={styles.sectionTitle}>Was wir bieten</h2>
                     <div className={styles.benefitsGrid}>
@@ -285,7 +517,10 @@ const Karriere = () => {
             </section>
 
             {/* Application Process Section */}
-            <section className={styles.processSection}>
+            <section
+                ref={setSectionRef('process')}
+                className={`${styles.processSection} ${styles.scrollAnimation} ${visibleSections.has('process') ? styles.scrollAnimationVisible : ''}`}
+            >
                 <div className={styles.container}>
                     <h2 className={styles.sectionTitle}>Unser Bewerbungsprozess</h2>
                     <div className={styles.processSteps}>
@@ -319,7 +554,10 @@ const Karriere = () => {
             </section>
 
             {/* CTA Section */}
-            <section className={styles.ctaSection}>
+            <section
+                ref={setSectionRef('cta')}
+                className={`${styles.ctaSection} ${styles.scrollAnimation} ${visibleSections.has('cta') ? styles.scrollAnimationVisible : ''}`}
+            >
                 <div className={styles.container}>
                     <div className={styles.ctaContent}>
                         <h3 className={styles.ctaTitle}>
@@ -331,7 +569,7 @@ const Karriere = () => {
                         </p>
                         <button
                             className={styles.ctaButton}
-                            onClick={() => setShowForm(true)}
+                            onClick={() => openApplicationForm('Initiativbewerbung')}
                         >
                             <span>Initiativbewerbung senden</span>
                             <div className={styles.ctaIcon}>
@@ -358,11 +596,6 @@ const Karriere = () => {
                                 >
                                     {selectedJob.department}
                                 </span>
-                                {selectedJob.urgent && (
-                                    <span className={styles.modalUrgentBadge}>
-                                        Dringend
-                                    </span>
-                                )}
                             </div>
 
                             <h2 className={styles.modalTitle}>
@@ -404,7 +637,7 @@ const Karriere = () => {
                                         <ul className={styles.modalList}>
                                             {selectedJob.responsibilities.map((item, index) => (
                                                 <li key={index} className={styles.modalListItem}>
-                                                    <div className={`${styles.modalListDot} ${styles.modalListDotOrange}`}></div>
+                                                    <div className={`${styles.modalListDot} ${styles.modalListDotBlue}`}></div>
                                                     <span>{item}</span>
                                                 </li>
                                             ))}
@@ -442,14 +675,7 @@ const Karriere = () => {
                             <div className={styles.modalFooter}>
                                 <button
                                     className={styles.modalApplyButton}
-                                    onClick={() => {
-                                        setSelectedJob(null);
-                                        setShowForm(true);
-                                        setFormData(prev => ({
-                                            ...prev,
-                                            position: selectedJob.title
-                                        }));
-                                    }}
+                                    onClick={() => openApplicationForm(selectedJob.title)}
                                 >
                                     <span>Jetzt bewerben</span>
                                     <div className={styles.modalApplyIcon}>
@@ -464,9 +690,15 @@ const Karriere = () => {
 
             {/* Application Form Modal */}
             {showForm && (
-                <div className={styles.formOverlay} onClick={() => setShowForm(false)}>
+                <div className={styles.formOverlay} onClick={() => {
+                    setShowForm(false);
+                    document.body.style.overflow = 'unset';
+                }}>
                     <div className={styles.formContent} onClick={(e) => e.stopPropagation()}>
-                        <button className={styles.closeBtn} onClick={() => setShowForm(false)}>
+                        <button className={styles.closeBtn} onClick={() => {
+                            setShowForm(false);
+                            document.body.style.overflow = 'unset';
+                        }}>
                             ×
                         </button>
 
@@ -568,7 +800,10 @@ const Karriere = () => {
                             </div>
 
                             <div className={styles.formActions}>
-                                <button type="button" className={styles.cancelButton} onClick={() => setShowForm(false)}>
+                                <button type="button" className={styles.cancelButton} onClick={() => {
+                                    setShowForm(false);
+                                    document.body.style.overflow = 'unset';
+                                }}>
                                     Abbrechen
                                 </button>
                                 <button type="submit" className={styles.submitButton}>

@@ -431,7 +431,7 @@
     box-shadow: 0 12px 35px rgba(230, 126, 34, 0.4);
 }
 
-/* Modal Styles */
+/* Modal Styles - FIXED für vollständige Textanzeige */
 .modalOverlay {
     position: fixed;
     inset: 0;
@@ -452,7 +452,7 @@
     border-radius: 0;
     max-width: 900px;
     max-height: 90vh;
-    overflow: hidden;
+    overflow-y: auto; /* Scrollbar für das gesamte Modal */
     position: relative;
     box-shadow: 0 40px 120px rgba(0, 0, 0, 0.2);
     animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -538,6 +538,15 @@
     line-height: 1.2;
     margin-bottom: 1rem;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    /* FIXED: Keine Textkürzung im Modal-Titel */
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .modalMeta {
@@ -550,8 +559,6 @@
 
 .modalBody {
     padding: 3rem;
-    overflow-y: auto;
-    max-height: calc(90vh - 300px);
 }
 
 .modalExcerpt {
@@ -564,17 +571,47 @@
     border-left: 4px solid #E67E22;
     border-radius: 0 12px 12px 0;
     margin-bottom: 2.5rem;
+    /* FIXED: Vollständige Textanzeige */
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-height: none;
 }
 
 .modalText {
     font-size: 1.1rem;
     color: #64748b;
     line-height: 1.8;
+    /* FIXED: Vollständige Textanzeige */
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-height: none;
     max-width: none;
 }
 
 .modalText p {
     margin-bottom: 1.5rem;
+    /* FIXED: Vollständige Textanzeige für Paragraphen */
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-height: none;
 }
 
 .modalText p:last-child {
@@ -693,6 +730,10 @@
 
     .modalBody {
         padding: 2rem 1.5rem;
+    }
+
+    .modalContent {
+        max-height: 95vh; /* Etwas mehr Platz auf Mobile */
     }
 
     .modalTitle {
