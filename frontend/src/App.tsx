@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Homepage from "./components/Homepage/Homepage.tsx";
 import Unternehmen from "./components/Unternehmen.tsx";
 import Kontakt from "./components/Kontakt.tsx";
-import Navbar from "./components/Navbar.tsx";
+import Navbar2 from "./components/Navbar2.tsx";
 import Footer from "./components/Footer.tsx";
 import Branchen from "./components/Branchen.tsx";
 import Leistungen from "./components/Leistungen.tsx";
@@ -15,7 +15,7 @@ import Rechtliches from "./components/Rechtliches.tsx"; // Neuer Import für App
 function App() {
     return (
         <div>
-            <Navbar/>
+            <Navbar2/>
             <ScrollToTop/>
                 <Routes>
                     <Route path="/" element={<Homepage/>} />

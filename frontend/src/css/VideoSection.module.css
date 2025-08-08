@@ -9,7 +9,7 @@
     background: #1f2937;
 }
 
-/* Video-Container ohne top-offset - Navbar-Padding wird durch Body-Padding berücksichtigt */
+/* Video-Container ohne top-offset - Navbar2-Padding wird durch Body-Padding berücksichtigt */
 .videoContainer {
     position: absolute;
     top: 0; /* Geändert von 90px auf 0 */
